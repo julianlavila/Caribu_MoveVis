@@ -1,20 +1,20 @@
+---
+title: "Caribou DataViz"
+author: "Julian Avila-Jimenez"
+date: "2/8/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
 
-Movement visualization of Caribou dataset 
-================
-
-Julián Avila-Jiménez
-
-Data visualization inspired in David Robinson Tidy Tuesday live screencast: [Analyzing caribou locations in R](https://www.youtube.com/watch?v=7G7SVODhVo4)
-
-
-# TidyTuesday #26 [Caribou Location Tracking](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-06-23/readme.md)
+# Caribou 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```
 
 #### Import the data
-```{r import message = FALSE, warning = FALSE}
+```{r import, message = FALSE, warning = FALSE}
 library(tidyverse)
 library(maps)
 library(lubridate)
@@ -25,7 +25,7 @@ caribou<- tidytuesdayR::tt_load("2020-06-23")
 ```
 
 #### Individuals
-```{r individuals message = FALSE, warning = FALSE}
+```{r individuals, message = FALSE, warning = FALSE}
 Ind<- caribou$individuals
 Loc<- caribou$locations
 Ind %>% summarize(across(sex:study_site,list(~mean(!is.na(.)))))
@@ -61,8 +61,7 @@ Ind %>%
   geom_point(color="deepskyblue4")+
   labs(x="Longitude", 
        y="Latitude")+
-  scale_size_continuous(guide=F)+
-  ggthemes::theme_map()
+  scale_size_continuous(guide=F)
 ```
 </br>
 much better! 
@@ -90,7 +89,9 @@ ExampleAnimal<-Loc %>%
  
 ExampleAnimal %>% 
   mutate(quarter= as.Date(floor_date(timestamp, "quarter"))) %>% 
-  ggplot(aes(longitude,latitude, color= factor(floor_date(timestamp, "quarter"))))+
+  ggplot(aes(longitude,
+             latitude, 
+             color= factor(floor_date(timestamp, "quarter"))))+
   geom_path()+
   labs(title = "Path of one caribou over time", 
        color="Quarter",
@@ -153,7 +154,7 @@ by_animal %>%
 
 
 ## Finaly the moveViz package!!
-```{r moveViz message = FALSE, warning = FALSE}
+```{r moveViz, message = FALSE, warning = FALSE}
 library(moveVis)
 library(move)
 
@@ -187,6 +188,4 @@ frames[[100]] # preview one of the frames, e.g. the 100th frame
 # animate frames
 animate_frames(frames, out_file = "moveVis.gif")
 ```
-
-
 
